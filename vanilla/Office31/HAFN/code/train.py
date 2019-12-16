@@ -9,7 +9,7 @@ import torch.nn.functional as F
 import torch.optim as optim
 from torchvision import transforms
 from torch.autograd import Variable
-
+from torchvision import datasets, transforms
 from utils import OfficeImage, weights_init, print_args
 from model import ResBase50, ResClassifier
 
@@ -24,7 +24,7 @@ parser.add_argument("--pre_epoches", default=60, type=int)
 parser.add_argument("--epoch", default=60, type=int)
 parser.add_argument("--snapshot", default="")
 parser.add_argument("--lr", default=0.001)
-parser.add_argument("--class_num", default=31)
+parser.add_argument("--class_num", default=65)
 parser.add_argument("--extract", default=True)
 parser.add_argument("--radius", default=25.0)
 parser.add_argument("--weight_L2norm", default=0.05)
@@ -35,10 +35,10 @@ parser.add_argument("--repeat", default='-1', type=str)
 args = parser.parse_args()
 print_args(args)
 
-source_root = os.path.join(args.data_root, args.source, "images")
-source_label = os.path.join(args.data_root, args.source, "label.txt")
-target_root = os.path.join(args.data_root, args.target, "images")
-target_label = os.path.join(args.data_root, args.target, "label.txt")
+# source_root = os.path.join(args.data_root, args.source, "images")
+# source_label = os.path.join(args.data_root, args.source, "label.txt")
+# target_root = os.path.join(args.data_root, args.target, "images")
+# target_label = os.path.join(args.data_root, args.target, "label.txt")
 
 train_transform = transforms.Compose([
     transforms.Scale((256, 256)),
@@ -48,8 +48,11 @@ train_transform = transforms.Compose([
     transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
 ])
 
-source_set = OfficeImage(source_root, source_label, train_transform)
-target_set = OfficeImage(target_root, target_label, train_transform)
+source_set = datasets.ImageFolder(root=args.data_root+args.source, transform=train_transform)
+target_set = datasets.ImageFolder(root=args.data_root+args.target, transform=train_transform)
+
+# source_set = OfficeImage(source_root, source_label, train_transform)
+# target_set = OfficeImage(target_root, target_label, train_transform)
 
 source_loader = torch.utils.data.DataLoader(source_set, batch_size=args.batch_size,
     shuffle=args.shuffle, num_workers=args.num_workers)
@@ -132,6 +135,6 @@ for epoch in range(1, args.epoch+1):
 
         opt_g.step()
         opt_f.step()
-    if epoch % 10 == 0:   
+    if epoch % 10 == 0:
         torch.save(netG.state_dict(), os.path.join(args.snapshot, "Office31_HAFN_" + args.task + "_netG_" + args.post + "." + args.repeat + "_" + str(epoch) + ".pth"))
         torch.save(netF.state_dict(), os.path.join(args.snapshot, "Office31_HAFN_" + args.task + "_netF_" + args.post + "." + args.repeat + "_" + str(epoch) + ".pth"))

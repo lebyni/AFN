@@ -6,35 +6,35 @@ target=('webcam' 'webcam' 'dslr' 'dslr' 'amazon' 'amazon')
 
 post='1'
 repeat='1'
-data_root='/data/da/data/Office31'
-snapshot='/data/da/vanilla/Office31/HAFN/snapshot'
-result='/home/xuruijia/yjh/domain_adaptation/vanilla/Office31/HAFN/result'
-epoch=60
-gpu_id='5'
+data_root='/home/yuancli/projects/fine-tune-domain/data/OFFICE31/'
+snapshot='/home/yuancli/projects/fine-tune-domain/product_result/noprivacy/snapshot/'
+result='/home/yuancli/projects/fine-tune-domain/product_result/noprivacy/'
+epoch=100
+gpu_id='0'
 
-for((index=0; index < 6; index++))
-do
-    echo ">> traning task ${index} : ${task[index]}"
-    
-    CUDA_VISIBLE_DEVICES=${gpu_id} python train.py \
-       --data_root ${data_root} \
-       --snapshot ${snapshot} \
-       --task ${task[index]} \
-       --source ${source[index]} \
-       --target ${target[index]} \
-       --epoch ${epoch} \
-       --post ${post} \
-       --repeat ${repeat}
-    
-    echo ">> testing task ${index} : ${task[index]}"
+#for((index=0; index < 6; index++))
+#do
+echo ">> traning task "
 
-    CUDA_VISIBLE_DEVICES=${gpu_id} python eval.py \
-        --data_root ${data_root} \
-        --snapshot ${snapshot} \
-        --result ${result} \
-        --task ${task[index]} \
-        --target ${target[index]} \
-        --epoch ${epoch} \
-       --post ${post} \
-       --repeat ${repeat}
-done
+CUDA_VISIBLE_DEVICES=${gpu_id} python3 train.py \
+   --data_root ${data_root} \
+   --snapshot ${snapshot} \
+   --task product \
+   --source mixed_data_Product \
+   --target Product_test \
+   --epoch ${epoch} \
+   --post ${post} \
+   --repeat ${repeat}
+
+echo ">> testing task "
+
+CUDA_VISIBLE_DEVICES=${gpu_id} python3 eval.py \
+    --data_root ${data_root} \
+    --snapshot ${snapshot} \
+    --result ${result} \
+    --task product \
+    --target Product_test \
+    --epoch ${epoch} \
+   --post ${post} \
+   --repeat ${repeat}
+#done

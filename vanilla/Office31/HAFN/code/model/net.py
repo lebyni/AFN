@@ -38,7 +38,7 @@ class ResBase50(nn.Module):
 
 
 class ResClassifier(nn.Module):
-    def __init__(self, class_num=31, extract=True, dropout_p=0.5):
+    def __init__(self, class_num=65, extract=True, dropout_p=0.5):
         super(ResClassifier, self).__init__()
         self.fc1 = nn.Sequential(
             nn.Linear(2048, 1000),

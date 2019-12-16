@@ -121,7 +121,7 @@ for epoch in range(1, args.epoch+1):
         loss.backward()
         
         if (i+1) % 5 == 0:
-            print "cls_loss: %.4f, entropy_loss: %.4f" % (s_cls_loss.data[0], t_entropy_loss.data[0])
+            print ("cls_loss: %.4f, entropy_loss: %.4f" % (s_cls_loss.data[0], t_entropy_loss.data[0]))
         
         opt_g.step()
         opt_f.step()

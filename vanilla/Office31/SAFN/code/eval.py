@@ -69,7 +69,7 @@ for epoch in range(args.epoch/2, args.epoch +1):
         correct += np.equal(labels, pred).sum()
 
     correct = correct * 1.0 / len(t_set)
-    print "Epoch {0}: {1}".format(epoch, correct)
+    print ("Epoch {0}: {1}".format(epoch, correct))
     result.write("Epoch " + str(epoch) + ": " + str(correct) + "\n")
 result.close()
 
